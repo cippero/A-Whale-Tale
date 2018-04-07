@@ -18,9 +18,10 @@ let stars;
 let score = 0;
 let scoreText;
 
-let speed = 15;
-let speedAcceleratorX = speed;
-let speedAcceleratorY = speed;
+// let speed = 15;
+// let speedAcceleratorX = speed;
+// let speedAcceleratorY = speed;
+
 
 function create() {
 
@@ -44,6 +45,7 @@ function create() {
     player.body.bounce.y = 0.2;
     player.body.gravity.y = 10;
     player.body.collideWorldBounds = true;
+    player.body.maxVelocity.x = 100;
     player.animations.add('left', [0, 1, 2, 3], 10, true);
     player.animations.add('right', [5, 6, 7, 8], 10, true);
 
@@ -73,29 +75,75 @@ function update() {
     //player.body.velocity.x = 0;
     //game.time.events.add(1000, accelerate, this);
     // let speed = 15;
-    if (cursors.left.isDown || cursors.right.isDown){
-        accelerateX(true);
-    } else if (cursors.left.isUp || cursors.right.isUp) {
-        accelerateX(false);
-    }
-    if (cursors.up.isDown || cursors.down.isDown){
-        accelerateY(true);
-    } else if (cursors.up.isUp || cursors.down.isUp) {
-        //accelerateY(false);
-    }
-    if (cursors.left.isDown) {
-        moveDirection(-speedAcceleratorX, "x", "left");
-    } else if (cursors.right.isDown) {
-        moveDirection(speedAcceleratorX, "x", "right");
+
+    // let speedMax = speed*10;
+    // let timeDelay = game.time.now;
+    // let accelerating = false;
+
+
+    // if (cursors.left.isDown || cursors.right.isDown){
+    //     accelerateX(true);
+    //     // accelerating = true;
+    // } else if (cursors.left.isUp || cursors.right.isUp) {
+    //     accelerateX(false);
+    //     // accelerating = false;
+    // }
+    // if (cursors.up.isDown || cursors.down.isDown){
+    //     accelerateY(true);
+    // } else if (cursors.up.isUp || cursors.down.isUp) {
+    //     accelerateY(false);
+    // }
+    if (cursors.left.isDown) {      //left = below zero
+        if (player.body.velocity.x > 0){
+            player.body.acceleration.x -= 10;
+            //console.log("greater");
+        } else {
+            player.body.acceleration.x -= 1;
+            //console.log("less");
+        }
+        player.animations.play("left");
+        //moveDirection(-speedAcceleratorX, "x", "left");
+
+    // } else if (cursors.left.isUp) {
+    //     if (player.body.velocity.x < 10){
+    //         player.body.acceleration.x = 0;
+    //         //console.log("greater");
+    //     } else {
+    //         player.body.acceleration.x -= 10;
+    //         //console.log("greater");
+    //     } 
+
+    } else if (cursors.right.isDown) {      //right = above zero
+        if (player.body.velocity.x < 0){
+            player.body.acceleration.x += 10;
+        } else {
+            player.body.acceleration.x += 1;
+        }
+        player.animations.play("right");
     } else {
         player.animations.stop();
         player.frame = 4;
+
+        if (player.body.velocity.x < -10){
+            player.body.acceleration.x += 10;
+            //player.animations.play("left");
+        } else if (player.body.velocity.x > -10 && player.body.velocity.x < 0){
+            player.body.acceleration.x = 0;
+            //player.animations.play("left");
+        } else if (player.body.velocity.x > 10){
+            player.body.acceleration.x -= 10;
+            //player.animations.play("right");
+        } else if (player.body.velocity.x < 10 && player.body.velocity.x > 0){
+            player.body.acceleration.x = 0;
+            //player.animations.play("right");
+        }
     }
     // if (cursors.up.isDown && player.body.touching.down && hitPlatform) {
+    //console.log(player.body.acceleration.x)
     if (cursors.up.isDown) {
-        moveDirection(-speedAcceleratorY, "y", "left");
+        //moveDirection(-speedAcceleratorY, "y", "left");
     } else if (cursors.down.isDown) {
-        moveDirection(speedAcceleratorY, "y", "right");
+        //moveDirection(speedAcceleratorY, "y", "right");
     }
 
 }
@@ -109,45 +157,45 @@ function moveDirection(speed, axis, animation) {
         player.animations.play(animation);
 }
 
-function accelerateX(accelerating) {
-    let speedMax = speed*10;
-    let timeDelay = game.time.now;
-    if (accelerating) {
-        if (speedAcceleratorX <= speedMax && timeDelay === game.time.now){
-            console.log(speedAcceleratorX);
-            speedAcceleratorX += 1;
-            timeDelay += 1000;
-        }
-    } 
-    else {
-        if (speedAcceleratorX >= speed && timeDelay === game.time.now){
-            console.log(speedAcceleratorX);
-            speedAcceleratorX -= 1;
-            timeDelay += 1000;
-        }
-    }
-}
+// function accelerateX(accelerating) {
+//     let speedMax = speed*10;
+//     let timeDelay = game.time.now;
+//     if (accelerating) {
+//         if (speedAcceleratorX <= speedMax && timeDelay === game.time.now){
+//             console.log(speedAcceleratorX);
+//             speedAcceleratorX += 2;
+//             timeDelay += 1000;
+//         }
+//     } 
+//     else {
+//         if (speedAcceleratorX >= speed && timeDelay === game.time.now){
+//             console.log(speedAcceleratorX);
+//             speedAcceleratorX -= 1;
+//             timeDelay += 1000;
+//         }
+//     }
+// }
 
-function accelerateY(accelerating) {
-    let speedMax = speed*10;
-    //speedAccelerator = speed;
-    let timeDelay = game.time.now;
-    //console.log(timeDelay, game.time.now);
-    if (accelerating) {
-        if (speedAcceleratorY <= speedMax && timeDelay === game.time.now){
-            console.log(speedAcceleratorY);
-            speedAcceleratorY += 1;
-            timeDelay += 1000;
-        }
-    } 
-    else {
-        if (speedAcceleratorY >= speed && timeDelay === game.time.now){
-            console.log(speedAcceleratorY);
-            speedAcceleratorY -= 1;
-            timeDelay += 1000;
-        }
-    }
-}
+// function accelerateY(accelerating) {
+//     let speedMax = speed*10;
+//     //speedAccelerator = speed;
+//     let timeDelay = game.time.now;
+//     //console.log(timeDelay, game.time.now);
+//     if (accelerating) {
+//         if (speedAcceleratorY <= speedMax && timeDelay === game.time.now){
+//             console.log(speedAcceleratorY);
+//             speedAcceleratorY += 2;
+//             timeDelay += 1000;
+//         }
+//     } 
+//     else {
+//         if (speedAcceleratorY >= speed && timeDelay === game.time.now){
+//             console.log(speedAcceleratorY);
+//             speedAcceleratorY -= 1;
+//             timeDelay += 1000;
+//         }
+//     }
+// }
 
 function collectStar (player, star) {
     star.kill();
