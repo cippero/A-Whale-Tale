@@ -32,21 +32,19 @@ function playerControls() {
     }
 
 
-    if (cursors.up.isDown) {      //left = below zero
+    if (cursors.up.isDown) {      //up = below zero
         if (player.body.velocity.y > 0){
             player.body.acceleration.y -= 10;
         } else {
             player.body.acceleration.y -= 1;
         }
-        //player.animations.play("left");
 
-    } else if (cursors.down.isDown) {      //right = above zero
+    } else if (cursors.down.isDown) {      //down = above zero
         if (player.body.velocity.y < 0){
             player.body.acceleration.y += 10;
         } else {
             player.body.acceleration.y += 1;
         }
-        //player.animations.play("right");
     } else {
         player.animations.stop();
         player.frame = 4;
