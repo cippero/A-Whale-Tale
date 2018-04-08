@@ -1,18 +1,55 @@
 let enemy;
 let enemies;
 const enemySpeed = 50;
-const enemyDetectionDistance = 250;
+const enemyDetectionDistance = 150;
+const bombDetectionDistance = 250;
+let bomb;
+let bombs;
+let bombsMax = 5;
+let bombsInPlay = 0;
 
 function enemyMove() {
 	enemies.children.forEach(function (val) {
 
 		if (Math.abs(val.position.x - player.position.x) < enemyDetectionDistance && Math.abs(val.position.y - player.position.y) < enemyDetectionDistance) {
+			if (bombsInPlay < bombsMax){
+				createBomb(val);
+				bombsInPlay += 1;
+			}
 			if (val.position.x < player.position.x) {
-				val.body.velocity.x = enemySpeed;
+				val.body.velocity.x = -enemySpeed;
 				val.animations.play("blinkingRight", 3, true);
 			} else {
-				val.body.velocity.x = -enemySpeed;
+				val.body.velocity.x = enemySpeed;
 				val.animations.play("blinkingLeft", 3, true);
+			}
+			if (val.position.y < player.position.y) {
+				val.body.velocity.y = -enemySpeed;
+			} else {
+				val.body.velocity.y = enemySpeed;
+			}
+		} else {
+
+		if (val.position.x > game.world.width*0.9){
+			val.body.velocity.x = -enemySpeed;
+			val.animations.play("blinkingLeft", 3, true);
+		} else if (val.position.x < game.world.width*0.1) {
+			val.body.velocity.x = enemySpeed;
+			val.animations.play("blinkingRight", 3, true);
+		}
+		}
+	})
+}
+
+function bombMove() {
+	bombs.children.forEach(function (val) {
+		console.log("proximity");
+		if (Math.abs(val.position.x - player.position.x) < bombDetectionDistance && Math.abs(val.position.y - player.position.y) < bombDetectionDistance) {
+			
+			if (val.position.x < player.position.x) {
+				val.body.velocity.x = enemySpeed;
+			} else {
+				val.body.velocity.x = -enemySpeed;
 			}
 			if (val.position.y < player.position.y) {
 				val.body.velocity.y = enemySpeed;
@@ -22,10 +59,8 @@ function enemyMove() {
 		} else {
 			if (val.position.x > game.world.width*0.9){
 				val.body.velocity.x = -enemySpeed;
-				val.animations.play("blinkingLeft", 3, true);
 			} else if (val.position.x < game.world.width*0.1) {
 				val.body.velocity.x = enemySpeed;
-				val.animations.play("blinkingRight", 3, true);
 			}
 		}
 	})
@@ -43,16 +78,21 @@ function createEnemies(num) {
     }
 }
 
+function createBomb(enemy) {
+        let bomb = bombs.create(enemy.position.x, enemy.position.y, 'bomb');
+        bomb.body.bounce.set(.7 + Math.random() * 0.5);
+        bomb.body.collideWorldBounds = true;
+        bomb.body.velocity.x = game.rnd.integerInRange(-enemySpeed*2, enemySpeed*2);
+        bomb.body.velocity.y = game.rnd.integerInRange(-enemySpeed*2, enemySpeed*2);
+}
+
 function enemyCollision(player, enemy) {
     enemy.kill();
-    health -= 10;
-    healthText.text = "health: " + health;
     createStars(Math.round(Math.random()*3), enemy.position.x, enemy.position.y);
 }
 
-function enemyBoop(enemy1, enemy2) {
-	// enemy1.body.velocity.x = game.rnd.integerInRange(enemySpeed*0.7, enemySpeed*1.3);
-	// enemy1.body.velocity.y = game.rnd.integerInRange(enemySpeed*0.7, enemySpeed*1.3);
-	// enemy2.body.velocity.x = game.rnd.integerInRange(enemySpeed*0.7, enemySpeed*1.3);
-	// enemy2.body.velocity.y = game.rnd.integerInRange(enemySpeed*0.7, enemySpeed*1.3);
+function bombCollision(player, bomb) {
+    bomb.kill();
+    health -= 10;
+    healthText.text = "health: " + health;
 }

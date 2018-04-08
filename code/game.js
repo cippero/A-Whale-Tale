@@ -2,7 +2,9 @@ let game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser', { preload: preload, 
 
 function preload() {
     game.load.image('sky', 'assets/sky.png');
-    game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
+    game.load.image('bomb', 'assets/bomb.png');
+    // game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
+    game.load.spritesheet('whale', 'assets/whaleSheet.png', 100, 72);
     game.load.spritesheet('evilSub', 'assets/subSheet1.png', 50, 50);
     game.load.image('ground', 'assets/platform.png');
     game.load.image('star', 'assets/star.png');
@@ -47,25 +49,31 @@ function create() {
     ledge = platforms.create(-150, 250, 'ground');
     ledge.body.immovable = true;
 
-    player = game.add.sprite(32, game.world.height - 120, 'dude');
+    player = game.add.sprite(32, game.world.height - 120, 'whale');
     game.physics.arcade.enable(player);
     player.body.bounce.y = 0.2;
     player.body.gravity.y = 10;
     player.body.collideWorldBounds = true;
     player.body.maxVelocity.x = 100;
     player.body.maxVelocity.y = 100;
-    player.animations.add('left', [0, 1, 2, 3], 10, true);
-    player.animations.add('right', [5, 6, 7, 8], 10, true);
+    player.animations.add('left', [4, 5, 6, 5], 10, true);
+    player.animations.add('right', [3, 2, 1, 2], 10, true);
+    player.animations.add('idleLeft', [4, 7], 10, true);
+    player.animations.add('idleRight', [3, 0], 10, true);
 
     enemies = game.add.group();
     enemies.enableBody = true;
+
+    bombs = game.add.group();
+    bombs.enableBody = true;
+
     createEnemies(5);
+    bombMove();
 
     game.camera.follow(player);
 
     stars = game.add.group();
     stars.enableBody = true;
-    //createStars(12);
     
     scoreText = game.add.text(16, 50, 'score: 0', { fontSize: '32px', fill: '#000' });
     healthText = game.add.text(16, 16, 'health: 100', { fontSize: '32px', fill: '#000' });
@@ -80,8 +88,10 @@ function update() {
     game.physics.arcade.collide(player, platforms);
     game.physics.arcade.collide(enemies, platforms);
     game.physics.arcade.collide(enemies, enemies);
-    game.physics.arcade.overlap(enemies, enemies, enemyBoop, null, this);
+    game.physics.arcade.collide(bombs, platforms);
+    //game.physics.arcade.overlap(enemies, enemies, enemyBoop, null, this);
     game.physics.arcade.overlap(player, enemies, enemyCollision, null, this);
+    game.physics.arcade.overlap(player, bombs, bombCollision, null, this);
     game.physics.arcade.collide(stars, platforms);
     game.physics.arcade.overlap(player, stars, collectStar, null, this);
         // game.physics.arcade.collide(player, layer);

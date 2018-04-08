@@ -1,6 +1,6 @@
 let player;
 
-function playerControls() {    
+function playerControls() {  
     if (cursors.left.isDown) {      //left = below zero
         player.animations.play("left");
         if (player.body.velocity.x > 0){
@@ -48,6 +48,7 @@ function playerControls() {
     } else {
         player.animations.stop();
         player.frame = 4;
+        
 
         if (player.body.velocity.y < -10){
             player.body.acceleration.y += 5;
