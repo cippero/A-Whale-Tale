@@ -1,19 +1,21 @@
+let player;
+
 function playerControls() {    
     if (cursors.left.isDown) {      //left = below zero
+        player.animations.play("left");
         if (player.body.velocity.x > 0){
             player.body.acceleration.x -= 10;
         } else {
             player.body.acceleration.x -= 1;
         }
-        player.animations.play("left");
 
     } else if (cursors.right.isDown) {      //right = above zero
+        player.animations.play("right");
         if (player.body.velocity.x < 0){
             player.body.acceleration.x += 10;
         } else {
             player.body.acceleration.x += 1;
         }
-        player.animations.play("right");
     } else {
         player.animations.stop();
         player.frame = 4;
@@ -36,7 +38,7 @@ function playerControls() {
         } else {
             player.body.acceleration.y -= 1;
         }
-        player.animations.play("left");
+        //player.animations.play("left");
 
     } else if (cursors.down.isDown) {      //right = above zero
         if (player.body.velocity.y < 0){
@@ -44,7 +46,7 @@ function playerControls() {
         } else {
             player.body.acceleration.y += 1;
         }
-        player.animations.play("right");
+        //player.animations.play("right");
     } else {
         player.animations.stop();
         player.frame = 4;

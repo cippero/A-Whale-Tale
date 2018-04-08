@@ -3,20 +3,21 @@ let game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser', { preload: preload, 
 function preload() {
     game.load.image('sky', 'assets/sky.png');
     game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
+    game.load.spritesheet('evilSub', 'assets/subSheet1.png', 50, 50);
     game.load.image('ground', 'assets/platform.png');
     // game.load.image('star', 'assets/star.png');
-    // game.load.image("bomb", "assets/bomb.png");
         // game.load.tilemap("map", "assets/tiles.json", null, Phaser.Tilemap.TILED_JSON);
         // game.load.image("level", "assets/tiles.png")
 }
 
-let player;
-let cursors;
 let score = 0;
-let platforms;
-let stars;
+let health = 100;
 let scoreText;
+let healthText;
+let cursors;
+let platforms;
 let skyBackground;
+// let stars;
     // let map;
     // let layer;
 
@@ -56,13 +57,18 @@ function create() {
     player.animations.add('left', [0, 1, 2, 3], 10, true);
     player.animations.add('right', [5, 6, 7, 8], 10, true);
 
+    enemies = game.add.group();
+    enemies.enableBody = true;
+    createEnemies(5);
+
     game.camera.follow(player);
 
     // stars = game.add.group();
     // stars.enableBody = true;
     //createStars(12);
     
-    // scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+    scoreText = game.add.text(16, 50, 'score: 0', { fontSize: '32px', fill: '#000' });
+    healthText = game.add.text(16, 16, 'health: 100', { fontSize: '32px', fill: '#000' });
 
     cursors = game.input.keyboard.createCursorKeys();
 }
@@ -71,14 +77,20 @@ function create() {
 function update() {
 
     skyBackground.tilePosition.y += 2;
-    let hitPlatform = game.physics.arcade.collide(player, platforms);
+    game.physics.arcade.collide(player, platforms);
+    game.physics.arcade.collide(enemies, platforms);
+    game.physics.arcade.overlap(player, enemies, enemyCollision, null, this);
     // game.physics.arcade.collide(stars, platforms);
-    // game.physics.arcade.collide(player, layer);
-
     // game.physics.arcade.overlap(player, stars, collectStar, null, this);
+        // game.physics.arcade.collide(player, layer);
 
     playerControls();
+    enemyMove();
 }
+
+
+
+
 
 
 // function collectStar (player, star) {
@@ -99,4 +111,6 @@ function update() {
 //         star.body.bounce.y = 0.7 + Math.random() * 0.2;
 //     }
 // }
+
+
 
