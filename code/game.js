@@ -1,7 +1,7 @@
 let game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser', { preload: preload, create: create, update: update });
 
 function preload() {
-    game.load.image('sky', 'assets/sky.png');
+    game.load.image('bubbles', 'assets/bg.png');
     game.load.image('bomb', 'assets/bomb.png');
     // game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
     game.load.spritesheet('whale', 'assets/whaleSheet.png', 100, 72);
@@ -35,7 +35,7 @@ function create() {
         // layer = map.createLayer("Tile Layer 1");
         // layer.resizeWorld();
 
-    skyBackground = game.add.tileSprite(0, 0, 800, 600, 'sky');
+    skyBackground = game.add.tileSprite(0, 0, 800, 600, 'bubbles');
 
     platforms = game.add.group();
     platforms.enableBody = true;
@@ -84,7 +84,7 @@ function create() {
 
 function update() {
 
-    skyBackground.tilePosition.y += 2;
+    skyBackground.tilePosition.y -= 0.2;
     game.physics.arcade.collide(player, platforms);
     game.physics.arcade.collide(enemies, platforms);
     game.physics.arcade.collide(enemies, enemies);

@@ -12,10 +12,13 @@ function enemyMove() {
 	enemies.children.forEach(function (val) {
 
 		if (Math.abs(val.position.x - player.position.x) < enemyDetectionDistance && Math.abs(val.position.y - player.position.y) < enemyDetectionDistance) {
-			if (bombsInPlay < bombsMax){
-				createBomb(val);
-				bombsInPlay += 1;
-			}
+			
+				setTimeout(function() {
+					if (bombsInPlay < bombsMax){
+						createBomb(val);
+					}
+				}, game.rnd.integerInRange(500, 2500)); 
+
 			if (val.position.x < player.position.x) {
 				val.body.velocity.x = -enemySpeed;
 				val.animations.play("blinkingRight", 3, true);
@@ -79,19 +82,22 @@ function createEnemies(num) {
 }
 
 function createBomb(enemy) {
+		bombsInPlay++;
         let bomb = bombs.create(enemy.position.x, enemy.position.y, 'bomb');
-        bomb.body.bounce.set(.7 + Math.random() * 0.5);
+        bomb.body.bounce.set(.5 + Math.random() * 0.5);
         bomb.body.collideWorldBounds = true;
         bomb.body.velocity.x = game.rnd.integerInRange(-enemySpeed*2, enemySpeed*2);
         bomb.body.velocity.y = game.rnd.integerInRange(-enemySpeed*2, enemySpeed*2);
 }
 
 function enemyCollision(player, enemy) {
-    enemy.kill();
+    //enemy.kill();
+    enemy.destroy();
     createStars(Math.round(Math.random()*3), enemy.position.x, enemy.position.y);
 }
 
 function bombCollision(player, bomb) {
+	bombsInPlay--;
     bomb.kill();
     health -= 10;
     healthText.text = "health: " + health;
