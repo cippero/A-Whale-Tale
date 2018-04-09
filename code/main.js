@@ -5,12 +5,15 @@ main.prototype = {
     	game.load.script('playGame', 'code/game.js');
     	game.load.script('player', 'code/player.js');
     	game.load.script('enemy', 'code/enemy.js');
+    	game.load.script('winGame', 'code/winGame.js');
+    	game.load.script('loseGame', 'code/loseGame.js');
     	
 	},
 	create: function () {
 		game.stage.backgroundColor = '#123456';
-		game.time.events.add(Phaser.Timer.SECOND * 4, this.startGame, this);
+		game.time.events.add(1000, this.startGame, this);
 		game.state.add('playGame', playGame);
+		game.state.add('winGame', win);
 		//setInterval(function(){
 	     	//game.state.start('playGame');
 		//}, 5000);

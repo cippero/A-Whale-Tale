@@ -13,7 +13,7 @@ function enemyMove() {
 
 		if (Math.abs(val.position.x - player.position.x) < enemyDetectionDistance && Math.abs(val.position.y - player.position.y) < enemyDetectionDistance) {
 			
-				setTimeout(function() {
+				setInterval(function() {
 					if (bombsInPlay < bombsMax){
 						createBomb(val);
 					}

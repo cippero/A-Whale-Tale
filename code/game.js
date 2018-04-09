@@ -65,8 +65,8 @@ let playGame = {
         player.body.maxVelocity.y = 100;
         player.animations.add('left', [4, 5, 6, 5], 10, true);
         player.animations.add('right', [3, 2, 1, 2], 10, true);
-        player.animations.add('idleLeft', [4, 7], 10, true);
-        player.animations.add('idleRight', [3, 0], 10, true);
+        player.animations.add('idleLeft', [4, 7], 2, true);
+        player.animations.add('idleRight', [3, 0], 2, true);
 
         enemies = game.add.group();
         enemies.enableBody = true;
@@ -105,6 +105,10 @@ let playGame = {
 
         playerControls();
         enemyMove();
+
+        if (score > 20){
+            this.winGame();
+        }
     },
 
 
@@ -130,6 +134,11 @@ let playGame = {
             star.body.bounce.y = 0.7 + Math.random() * 0.2;
             star.body.collideWorldBounds = true;
         }
+    },
+
+    winGame: function() {
+        console.log("you win the game!");
+        game.state.start('winGame');
     }
 
 }
