@@ -91,9 +91,8 @@ function createBomb(enemy) {
 }
 
 function enemyCollision(player, enemy) {
-    //enemy.kill();
     enemy.destroy();
-    createStars(Math.round(Math.random()*3), enemy.position.x, enemy.position.y);
+    playGame.createStars(Math.round(Math.random()*3), game.rnd.integerInRange(enemy.position.x-10, enemy.position.x+10), game.rnd.integerInRange(enemy.position.y-10, enemy.position.y+10));
 }
 
 function bombCollision(player, bomb) {
