@@ -96,8 +96,11 @@ function enemyCollision(player, enemy) {
 }
 
 function bombCollision(player, bomb) {
-	bombsInPlay--;
-    bomb.kill();
-    health -= 10;
-    healthText.text = "health: " + health;
+	bomb.destroy();
+	if (alive){
+		console.log(alive);
+		bombsInPlay--;
+    	health -= 10;
+    	healthText.text = "health: " + health;
+	}
 }

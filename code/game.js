@@ -6,7 +6,6 @@
 
 let playGame = {
     preload: function() {
-        console.log("playGame");
         game.load.image('bubbles', 'assets/bg.png');
         game.load.image('bomb', 'assets/bomb.png');
         // game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
@@ -28,6 +27,8 @@ let playGame = {
         platforms = null;
         skyBackground = null;
         stars = null;
+        statusText = null;
+        alive = true;
             // map;
             // layer;
 
@@ -36,6 +37,7 @@ let playGame = {
 
         game.stage.backgroundColor = '#787878';
 
+
             // map = game.add.tilemap("map");
             // map.addTilesetImage("level");
             // map.setCollisionBetween(1,9);
@@ -43,6 +45,7 @@ let playGame = {
             // layer.resizeWorld();
 
         skyBackground = game.add.tileSprite(0, 0, 800, 600, 'bubbles');
+        skyBackground.fixedToCamera = false;
 
         platforms = game.add.group();
         platforms.enableBody = true;
@@ -106,8 +109,14 @@ let playGame = {
         playerControls();
         enemyMove();
 
-        if (score > 20){
+        if (score > 100 && enemies.children.length === 0){
             this.winGame();
+            alive = false;
+        }
+
+        if (health <= 0){
+            this.loseGame();
+            alive = false;
         }
     },
 
@@ -118,8 +127,12 @@ let playGame = {
 
     collectStar: function(player, star) {
         star.kill();
-        score += 10;
-        scoreText.text = 'Score: ' + score;
+        if (!alive){
+            console.log(alive);
+            score += 10;
+            scoreText.text = 'Score: ' + score;
+        }
+        
     //     // if (stars.total === 6){
     //     //     let x = (player.x < 400) ? game.rnd.integerInRange(400, 800) : game.rnd.integerInRange(0, 400); 
     //     //     //assigns x value in right half of screen if player is in left half, otherwise in left half
@@ -137,13 +150,18 @@ let playGame = {
     },
 
     winGame: function() {
-        console.log("you win the game!");
-        game.state.start('winGame');
+        statusText = game.add.text(game.world.width/2-100, game.world.height/2, 'You win!', { fontSize: '32px', fill: '#000' });
+        game.time.events.add(5000, function(){
+            game.state.start('winGame');
+        }, this);
+    },
+
+    loseGame: function() {
+        statusText = game.add.text(game.world.width/2-100, game.world.height/2, 'You lose :(', { fontSize: '32px', fill: '#000' });
+        game.time.events.add(5000, function(){
+            game.state.start('loseGame');
+        }, this);
     }
 
 }
-
-// playGame.preload();
-// playGame.create();
-// playGame.update();
 

@@ -7,16 +7,35 @@ main.prototype = {
     	game.load.script('enemy', 'code/enemy.js');
     	game.load.script('winGame', 'code/winGame.js');
     	game.load.script('loseGame', 'code/loseGame.js');
-    	
+    	let whaleButton = game.load.spritesheet('button', 'assets/whaleSheet.png', 100, 72);
 	},
 	create: function () {
 		game.stage.backgroundColor = '#123456';
-		game.time.events.add(1000, this.startGame, this);
+
+		game.add.text(game.world.centerX - 225, 150, "A Whale's Tale", { fontSize: '62px', fill: '#000' });
+
+		button = game.add.button(game.world.centerX - 95, 400, 'button', actionOnClick, this, 1, 0);
+		//     button.onInputOver.add(over, this);
+		//     button.onInputOut.add(out, this);
+		//     button.onInputUp.add(up, this);
+		// }
+		// function up() {
+		//     console.log('button up', arguments);
+		// }
+		// function over() {
+		//     console.log('button over');
+		// }
+		// function out() {
+		//     console.log('button out');
+		// }
+		function actionOnClick () {
+		    this.startGame();
+		}
+
+		//game.time.events.add(1000, this.startGame, this);
 		game.state.add('playGame', playGame);
-		game.state.add('winGame', win);
-		//setInterval(function(){
-	     	//game.state.start('playGame');
-		//}, 5000);
+		game.state.add('winGame', winGame);
+		game.state.add('loseGame', loseGame);
 	},
 	startGame: function() {
 		game.state.start('playGame');
