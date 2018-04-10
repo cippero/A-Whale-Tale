@@ -13,7 +13,7 @@ function enemyMove() {
 	enemies.forEachAlive(function (val) {
 		if (Math.abs(val.position.x - player.position.x) < enemyDetectionDistance && Math.abs(val.position.y - player.position.y) < enemyDetectionDistance) {
 
-			
+
 
 			if (val.position.x < player.position.x) {
 				val.body.velocity.x = -enemySpeed;
@@ -53,23 +53,19 @@ function bombMove() {
 	bombs.children.forEach(function (val) {
 		if (Math.abs(val.position.x - player.position.x) < bombDetectionDistance && Math.abs(val.position.y - player.position.y) < bombDetectionDistance) {
 			if (val.position.x < player.position.x) {
-				//val.body.velocity.x = enemySpeed;
 				if (val.body.velocity.x < enemySpeed){
 					val.body.velocity.x += 2;
 				}
 			} else {
-				//val.body.velocity.x = -enemySpeed;
 				if (val.body.velocity.x > enemySpeed){
 					val.body.velocity.x -= 2;
 				}
 			}
 			if (val.position.y < player.position.y) {
-				//val.body.velocity.y = enemySpeed;
 				if (val.body.velocity.y < enemySpeed){
 					val.body.velocity.y += 2;
 				}
 			} else {
-				//val.body.velocity.y = -enemySpeed;
 				if (val.body.velocity.y > enemySpeed){
 					val.body.velocity.y -= 2;
 				}
@@ -84,9 +80,10 @@ function bombMove() {
 	})
 }
 
-function createEnemies(num) {
+function createEnemies(num, x, y) {
     for (let i = 0; i < num; i++) {
-        let enemy = enemies.create(game.world.width*Math.random(), 0, 'evilSub');
+        //let enemy = enemies.create(game.world.width*Math.random(), 0, 'evilSub');
+        let enemy = enemies.create(x, y, 'evilSub');
         enemy.body.gravity.y = 5;
         enemy.body.bounce.y = 1;
         enemy.animations.add('blinkingLeft', [0,7,1,6,2,5,3,4], 10, true);
