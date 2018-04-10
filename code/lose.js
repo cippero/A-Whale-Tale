@@ -24,7 +24,7 @@ let lose = {
 		button = game.add.button(game.world.centerX - 95, 400, 'button', actionOnClick, this, 1, 0);
 
 		function actionOnClick () {
-		    game.state.start('main');
+		    game.state.start('playGame');
 		}
 	}
 };

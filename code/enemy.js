@@ -12,6 +12,9 @@ let creatingBombs = true;
 function enemyMove() {
 	enemies.forEachAlive(function (val) {
 		if (Math.abs(val.position.x - player.position.x) < enemyDetectionDistance && Math.abs(val.position.y - player.position.y) < enemyDetectionDistance) {
+
+			
+
 			if (val.position.x < player.position.x) {
 				val.body.velocity.x = -enemySpeed;
 			} else {
@@ -34,6 +37,7 @@ function enemyMove() {
 		} else {
 			val.animations.play("blinkingRight", 3, true);
 		}
+
 	});
 
 	if (bombsInPlay < bombsMax && creatingBombs && enemies.children.length > 0){
@@ -48,16 +52,27 @@ function enemyMove() {
 function bombMove() {
 	bombs.children.forEach(function (val) {
 		if (Math.abs(val.position.x - player.position.x) < bombDetectionDistance && Math.abs(val.position.y - player.position.y) < bombDetectionDistance) {
-			
 			if (val.position.x < player.position.x) {
-				val.body.velocity.x = enemySpeed;
+				//val.body.velocity.x = enemySpeed;
+				if (val.body.velocity.x < enemySpeed){
+					val.body.velocity.x += 2;
+				}
 			} else {
-				val.body.velocity.x = -enemySpeed;
+				//val.body.velocity.x = -enemySpeed;
+				if (val.body.velocity.x > enemySpeed){
+					val.body.velocity.x -= 2;
+				}
 			}
 			if (val.position.y < player.position.y) {
-				val.body.velocity.y = enemySpeed;
+				//val.body.velocity.y = enemySpeed;
+				if (val.body.velocity.y < enemySpeed){
+					val.body.velocity.y += 2;
+				}
 			} else {
-				val.body.velocity.y = -enemySpeed;
+				//val.body.velocity.y = -enemySpeed;
+				if (val.body.velocity.y > enemySpeed){
+					val.body.velocity.y -= 2;
+				}
 			}
 		} else {
 			if (val.position.x > game.world.width*0.9){
@@ -85,6 +100,7 @@ function createEnemies(num) {
 function createBomb(enemy) {
 	bombsInPlay++;
     let bomb = bombs.create(enemy.position.x, enemy.position.y, 'bomb');
+    game.physics.arcade.enable(bomb);
     bomb.body.bounce.set(.5 + Math.random() * 0.5);
     bomb.body.collideWorldBounds = true;
     bomb.body.velocity.x = game.rnd.integerInRange(-enemySpeed*2, enemySpeed*2);
