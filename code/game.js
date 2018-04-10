@@ -127,8 +127,7 @@ let playGame = {
 
     collectStar: function(player, star) {
         star.kill();
-        if (!alive){
-            console.log(alive);
+        if (alive){
             score += 10;
             scoreText.text = 'Score: ' + score;
         }
@@ -159,7 +158,7 @@ let playGame = {
     loseGame: function() {
         statusText = game.add.text(game.world.width/2-100, game.world.height/2, 'You lose :(', { fontSize: '32px', fill: '#000' });
         game.time.events.add(5000, function(){
-            game.state.start('loseGame');
+            game.state.start('lose');
         }, this);
     }
 
