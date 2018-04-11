@@ -5,7 +5,7 @@ const enemyDetectionDistance = 150;
 const bombDetectionDistance = 250;
 let bomb;
 let bombs;
-let bombsMax = 20;
+let bombsMax = 35;
 let creatingBombs = true;
 
 function enemyMove() {

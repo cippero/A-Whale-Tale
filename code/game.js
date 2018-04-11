@@ -74,8 +74,6 @@ let playGame = {
 
         bombs = game.add.group();
         bombs.enableBody = true;
-
-        this.gameReset();
     
         stars = game.add.group();
         stars.enableBody = true;
@@ -88,7 +86,7 @@ let playGame = {
         cursors = game.input.keyboard.createCursorKeys();
 
         bgmusic = game.add.audio('underSea');
-        bgmusic.play('', 0, .3, true);
+        this.gameReset();
     },
 
     update: function() {
@@ -156,6 +154,14 @@ let playGame = {
         alive = true;
         health = 100;
         score = 0;
+        enemies.children.forEach(enemy => {
+            enemy.destroy();
+        });
+        bombs.children.forEach(bomb => {
+            bomb.destroy();
+        });
+        game.sound.stopAll();
+        bgmusic.play('', 0, .3, true);
         createEnemies(1, 1145, 800);
         createEnemies(1, 700, 1100);
         createEnemies(1, 1800, 345);
