@@ -1,3 +1,4 @@
+[Play the game!](http://smiling-bone.surge.sh/)
 # A Whale's Tale
 
 ## Project Proposal
