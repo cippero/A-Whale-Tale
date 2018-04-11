@@ -19,8 +19,8 @@ main.prototype = {
 		game.add.text(game.world.centerX - 140, 170, "Instructions:", { fontSize: '42px', fill: '#fff' });
 
 		game.add.text(game.world.centerX - 370, 250, "On their journey to visit Wales, Wally has been seperated from his pod!", { font: 'bold 22px Arial', fill: '#fff' });
-		game.add.text(game.world.centerX - 310, 285, "Use the arrow keys to swim around while avoiding the evil", { font: 'bold 22px Arial', fill: '#fff' }); 
-		game.add.text(game.world.centerX - 300, 320, "robot submarines' bombs and looking for Wally's family", { font: 'bold 22px Arial', fill: '#fff' });
+		game.add.text(game.world.centerX - 310, 285, "Use the arrow keys to swim around while avoiding bombs", { font: 'bold 22px Arial', fill: '#fff' }); 
+		game.add.text(game.world.centerX - 300, 320, "and looking for Wally's family. Dive in when you're ready.", { font: 'bold 22px Arial', fill: '#fff' });
 
 		button = game.add.button(game.world.centerX - 95, 400, 'button', actionOnClick, this, 1, 0);
 

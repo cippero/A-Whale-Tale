@@ -1,9 +1,17 @@
 let winGame = {
 	create: function() { 
 		game.stage.backgroundColor = '#123456';	
-		game.add.text(game.world.centerX - 225, 50, "A Whale's Tale", { fontSize: '62px', fill: '#fff' });
-		let message1 = "You saved Wally!";
-		let message2 = "Yaaaaaaaay";
+		let text = game.add.text(175, 50, "A Whale's Tale", { fontSize: '62px', fill: '#fff' });
+		text.fixedToCamera = true;
+		let message1 = "";
+		let message2 = "";
+		if (score === 0) {
+			message1 = "You got zero points, but at least Wally is reunited with his pod!";
+			message2 = "Whale, everything went swimmingly."
+		} else if (score > 0){
+			message1 = "Krilliant! You got " + score + " points AND reunited Wally with his pod.";
+			message2 = "You shore fulfilled your purpoise!"
+		}
 		//let score = 0;
 		// if (score === 0) {
 		// 	message1 = "You failed to reunite Wally with his pod AND you got zero points.";
@@ -16,12 +24,12 @@ let winGame = {
 		// 	message2 = "will never get to use them. Because he's dead. Because of you.";
 		// }
 
-		game.add.text(game.world.centerX - 120, 170, message1, { fontSize: '22px', fill: '#fff' });
+		text = game.add.text(80, 170, message1, { fontSize: '22px', fill: '#fff' });
+		text.fixedToCamera = true;
+		text = game.add.text(200, 200, message2, { fontSize: '22px', fill: '#fff' });
+		text.fixedToCamera = true;
 
-		game.add.text(game.world.centerX - 95, 200, message2, { fontSize: '22px', fill: '#fff' });
-
-
-		button = game.add.button(game.world.centerX - 95, 400, 'button', actionOnClick, this, 1, 0);
+		button = game.add.button(305, 400, 'button', actionOnClick, this, 1, 0);
 
 		function actionOnClick () {
 		    game.state.start('playGame');

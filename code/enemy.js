@@ -1,19 +1,16 @@
 let enemy;
 let enemies;
-const enemySpeed = 100;
+const enemySpeed = 75;
 const enemyDetectionDistance = 150;
 const bombDetectionDistance = 250;
 let bomb;
 let bombs;
-let bombsMax = 10;
-let bombsInPlay = 0;
+let bombsMax = 20;
 let creatingBombs = true;
 
 function enemyMove() {
 	enemies.forEachAlive(function (val) {
 		if (Math.abs(val.position.x - player.position.x) < enemyDetectionDistance && Math.abs(val.position.y - player.position.y) < enemyDetectionDistance) {
-
-
 
 			if (val.position.x < player.position.x) {
 				val.body.velocity.x = -enemySpeed;
@@ -25,28 +22,32 @@ function enemyMove() {
 			} else {
 				val.body.velocity.y = enemySpeed;
 			}
+
 		} else {
+
 			if (val.position.x > game.world.width*0.9){
 				val.body.velocity.x = -enemySpeed;
 			} else if (val.position.x < game.world.width*0.1) {
 				val.body.velocity.x = enemySpeed;
 			}
 		}
+
+		if (Math.abs(val.position.x - player.position.x) < enemyDetectionDistance*3 && Math.abs(val.position.y - player.position.y) < enemyDetectionDistance*3) {
+			if (creatingBombs){
+				createBomb(val);
+				creatingBombs = false;
+				game.time.events.add(game.rnd.integerInRange(1000, 2000), () => {
+					creatingBombs = true;
+				}, this);
+			}
+		}
+
 		if (val.body.velocity.x < 0){
 			val.animations.play("blinkingLeft", 3, true);
 		} else {
 			val.animations.play("blinkingRight", 3, true);
 		}
-
 	});
-
-	if (bombsInPlay < bombsMax && creatingBombs && enemies.children.length > 0){
-		createBomb(enemies.children[Math.floor(Math.random()*enemies.children.length)]);
-		creatingBombs = false;
-		game.time.events.add(game.rnd.integerInRange(2000, 4000), () => {
-			creatingBombs = true;
-		}, this);
-	}
 }
 
 function bombMove() {
@@ -77,6 +78,11 @@ function bombMove() {
 				val.body.velocity.x = enemySpeed;
 			}
 		}
+
+		if (Math.abs(val.position.x - player.position.x) > 1000) {
+			val.destroy();
+		}
+
 	})
 }
 
@@ -95,7 +101,6 @@ function createEnemies(num, x, y) {
 }
 
 function createBomb(enemy) {
-	bombsInPlay++;
     let bomb = bombs.create(enemy.position.x, enemy.position.y, 'bomb');
     game.physics.arcade.enable(bomb);
     bomb.body.bounce.set(.5 + Math.random() * 0.5);
@@ -106,13 +111,12 @@ function createBomb(enemy) {
 
 function enemyCollision(player, enemy) {
     enemy.destroy();
-    playGame.createStars(Math.round(Math.random()*3), game.rnd.integerInRange(enemy.position.x-10, enemy.position.x+10), game.rnd.integerInRange(enemy.position.y-10, enemy.position.y+10));
+    playGame.createStars(Math.round(Math.random()*5)+1, game.rnd.integerInRange(enemy.position.x-10, enemy.position.x+10), game.rnd.integerInRange(enemy.position.y-10, enemy.position.y+10));
 }
 
 function bombCollision(player, bomb) {
 	bomb.destroy();
 	if (alive){
-		bombsInPlay--;
     	health -= 10;
     	healthText.text = "health: " + health;
 	}
