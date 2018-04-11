@@ -1,6 +1,6 @@
 let enemy;
 let enemies;
-const enemySpeed = 100;
+const enemySpeed = 75;
 const enemyDetectionDistance = 150;
 const bombDetectionDistance = 250;
 let bomb;
@@ -12,9 +12,6 @@ let creatingBombs = true;
 function enemyMove() {
 	enemies.forEachAlive(function (val) {
 		if (Math.abs(val.position.x - player.position.x) < enemyDetectionDistance && Math.abs(val.position.y - player.position.y) < enemyDetectionDistance) {
-
-
-
 			if (val.position.x < player.position.x) {
 				val.body.velocity.x = -enemySpeed;
 			} else {
@@ -25,12 +22,13 @@ function enemyMove() {
 			} else {
 				val.body.velocity.y = enemySpeed;
 			}
-		} else {
-			if (val.position.x > game.world.width*0.9){
-				val.body.velocity.x = -enemySpeed;
-			} else if (val.position.x < game.world.width*0.1) {
-				val.body.velocity.x = enemySpeed;
-			}
+
+		// } else {
+		// 	game.time.events.add(game.rnd.integerInRange(2000, 4000), () => {
+		// 		Math.random() > 0.5 ? val.body.velocity.x = enemySpeed : val.body.velocity.x = -enemySpeed;
+		// 		Math.random() > 0.5 ? val.body.velocity.y = enemySpeed : val.body.velocity.y = -enemySpeed;
+		// 		//val.body.velocity.x = enemySpeed * Math.random();
+		// 	}, this);
 		}
 		if (val.body.velocity.x < 0){
 			val.animations.play("blinkingLeft", 3, true);
@@ -91,6 +89,9 @@ function createEnemies(num, x, y) {
         enemy.body.collideWorldBounds = true;
         enemy.body.velocity.x = game.rnd.integerInRange(-enemySpeed, enemySpeed);
         enemy.body.velocity.y = game.rnd.integerInRange(-enemySpeed, enemySpeed);
+        // enemy.body.onCollide.add( () => {
+        //     console.log("collision");
+        // }, this);
     }
 }
 
@@ -106,7 +107,17 @@ function createBomb(enemy) {
 
 function enemyCollision(player, enemy) {
     enemy.destroy();
-    playGame.createStars(Math.round(Math.random()*3), game.rnd.integerInRange(enemy.position.x-10, enemy.position.x+10), game.rnd.integerInRange(enemy.position.y-10, enemy.position.y+10));
+    createStars(Math.floor(Math.random()*3)+1, enemy.position.x, enemy.position.y);
+}
+
+function createStars(num, x, y) {
+    for (let i = 0; i < num; i++) {
+        let star = stars.create(game.rnd.integerInRange(x-10, x+10), game.rnd.integerInRange(y-10, y+10), 'star');
+        star.body.gravity.y = game.rnd.integerInRange(-10, 10);
+        star.body.bounce.y = 0.7 + Math.random() * 0.2;
+        star.body.collideWorldBounds = true;
+        star
+    }
 }
 
 function bombCollision(player, bomb) {

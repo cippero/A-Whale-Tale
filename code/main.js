@@ -10,7 +10,8 @@ main.prototype = {
     	let whaleButton = game.load.spritesheet('button', 'assets/whaleSheet.png', 100, 72);
 	},
 	create: function () {
-
+		// player = game.add.sprite(80, 940, 'whale');
+		// player.animations.add('idleRight', [3, 0], 2, true);
 
 		game.stage.backgroundColor = '#123456';
 

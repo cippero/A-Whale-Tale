@@ -1,7 +1,10 @@
 let lose = {
 	create: function() { 
+		game.world.setBounds(0,0, 800, 600);
+
 		game.stage.backgroundColor = '#123456';	
-		game.add.text(game.world.centerX - 225, 50, "A Whale's Tale", { fontSize: '62px', fill: '#fff' });
+		let text = game.add.text(game.world.centerX - 225, 50, "A Whale's Tale", { fontSize: '62px', fill: '#fff' });
+		text.fixedToCamera = true;
 		let message1 = "";
 		let message2 = "";
 		let score = 0;
@@ -17,13 +20,15 @@ let lose = {
 		}
 
 		game.add.text(game.world.centerX - 340, 170, message1, { fontSize: '22px', fill: '#fff' });
+		text.fixedToCamera = true;
 
 		game.add.text(game.world.centerX - 340, 200, message2, { fontSize: '22px', fill: '#fff' });
-
+		text.fixedToCamera = true;
 
 		button = game.add.button(game.world.centerX - 95, 400, 'button', actionOnClick, this, 1, 0);
 
 		function actionOnClick () {
+			//playGame.gameRestart();
 		    game.state.start('playGame');
 		}
 	}

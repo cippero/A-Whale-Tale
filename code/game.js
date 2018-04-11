@@ -8,12 +8,12 @@ let playGame = {
         game.load.image('star', 'assets/star.png');
         game.load.tilemap("map", "assets/firstroom.json", null, Phaser.Tilemap.TILED_JSON);
         game.load.image("tiles1", "assets/tiles1.png")
+        //game.load.audio('main-bgm', 'assets/main.mp3'); 
     },
 
     create: function() { 
 
         score = 0;
-        health = 100;
         scoreText = null;
         healthText = null;
         cursors = null;
@@ -21,10 +21,10 @@ let playGame = {
         bubblesBG = null;
         stars = null;
         statusText = null;
-        alive = true;
         map = null;
         layer = null;
         pod = null;
+        //mainbgm = null;
 
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -37,16 +37,15 @@ let playGame = {
         map.setCollisionBetween(1,4, true, "floor");
         map.setCollisionBetween(6,9, true, "floor");
         layer = map.createLayer("floor");
-
-        
-        
-
         game.world.setBounds(0,0, 4096, 2048);
-        //game.add.tileSprite(0,0, 4096, 2048, "background");
 
         player = game.add.sprite(80, 940, 'whale');
         game.physics.arcade.enable(player);
-        player.body.bounce.y = 0.2;
+        game.camera.follow(player);
+        player.body.drag.x = 20;
+        player.body.drag.y = 20;
+        player.body.bounce.y = 0.5;
+        player.body.bounce.x = 0.5;
         player.body.gravity.y = 10;
         player.body.collideWorldBounds = true;
         player.body.maxVelocity.x = 100;
@@ -55,13 +54,12 @@ let playGame = {
         player.animations.add('right', [3, 2, 1, 2], 10, true);
         player.animations.add('idleLeft', [4, 7], 2, true);
         player.animations.add('idleRight', [3, 0], 2, true);
-        game.camera.follow(player);
 
         pod = game.add.group();
         pod.enableBody = true;
-        pod.create(120, 940, 'whale').scale.setTo(0.7);
-        pod.create(200, 900, 'whale').scale.setTo(0.8);
-        pod.create(80, 880, 'whale');
+        pod.create(3775, 600, 'whale').scale.setTo(0.7);
+        pod.create(3855, 560, 'whale').scale.setTo(0.8);
+        pod.create(3735, 540, 'whale');
         pod.children.forEach(fam => {
             fam.animations.add('idleLeft', [4, 7], 2, true);
             fam.play("idleLeft", true);
@@ -69,22 +67,25 @@ let playGame = {
         
         enemies = game.add.group();
         enemies.enableBody = true;
+        
 
         bombs = game.add.group();
         bombs.enableBody = true;
 
-        createEnemies(1, 1145, 800);
-        createEnemies(1, 1800, 345);
-        createEnemies(1, 2200, 1200);
-        //createEnemies(5);
+        this.gameRestart();
     
         stars = game.add.group();
         stars.enableBody = true;
         
-        scoreText = game.add.text(16, 50, 'score: 0', { fontSize: '32px', fill: '#fff' });
-        healthText = game.add.text(16, 16, 'health: ' + this.health, { fontSize: '32px', fill: '#fff' });
+        scoreText = game.add.text(16, 50, 'score: ' + score, { fontSize: '32px', fill: '#fff' });
+        healthText = game.add.text(16, 16, 'health: ' + health, { fontSize: '32px', fill: '#fff' });
+        scoreText.fixedToCamera = true;
+        healthText.fixedToCamera = true;
 
         cursors = game.input.keyboard.createCursorKeys();
+
+        //mainbgm = game.add.audio('main-bgm');
+        //mainbgm.play('', 0, .3, false)
     },
 
     update: function() {
@@ -94,6 +95,7 @@ let playGame = {
         game.physics.arcade.collide(bombs, layer);
         game.physics.arcade.collide(player, pod);
         game.physics.arcade.collide(pod, layer);
+        game.physics.arcade.collide(stars, layer);
         game.physics.arcade.overlap(player, enemies, enemyCollision, null, this);
         game.physics.arcade.overlap(player, bombs, bombCollision, null, this);
         game.physics.arcade.overlap(player, stars, this.collectStar, null, this);
@@ -103,13 +105,13 @@ let playGame = {
         enemyMove();
         bombMove();
 
-        if (score > 100 && enemies.children.length === 0){
+        if (player.position.x > 3600) {
             this.winGame();
             alive = false;
         }
 
         if (health <= 0){
-            this.loseGame();
+            this.lose();
             alive = false;
         }
     },
@@ -122,27 +124,38 @@ let playGame = {
         }
     },
 
-    createStars: function(num, x, y) {
-        for (let i = 0; i < num; i++) {
-            let star = stars.create(game.rnd.integerInRange(x*0.9, x*1.1), game.rnd.integerInRange(y*0.9, y*1.1), 'star');
-            star.body.gravity.y = game.rnd.integerInRange(-10, 10);
-            star.body.bounce.y = 0.7 + Math.random() * 0.2;
-            star.body.collideWorldBounds = true;
-        }
-    },
-
     winGame: function() {
-        statusText = game.add.text(game.world.width/2-100, game.world.height/2, 'You win!', { fontSize: '32px', fill: '#000' });
+        statusText = game.add.text(300, 300, 'You win!', { fontSize: '32px', fill: '#fff' });
+        statusText.fixedToCamera = true;
         game.time.events.add(5000, function(){
             game.state.start('winGame');
         }, this);
     },
 
     loseGame: function() {
-        statusText = game.add.text(game.world.width/2-100, game.world.height/2, 'You lose :(', { fontSize: '32px', fill: '#000' });
+        statusText = game.add.text(300, 300, 'You lose :(', { fontSize: '32px', fill: '#fff' });
+        statusText.fixedToCamera = true;
         game.time.events.add(5000, function(){
             game.state.start('lose');
         }, this);
+    },
+
+    gameRestart: function() {
+        this.score = 0;
+        health = 100;
+        if (enemies.children.length < 10 && enemies.children.length !== 0) {
+            enemies.children.forEach(enemy => {
+                enemy.destroy();
+            });
+        }
+        if (bombs.children.length > 0) {
+            bombs.children.forEach(bomb => {
+                bomb.destroy();
+            });
+        }
+        createEnemies(1, 1145, 800);
+        createEnemies(1, 1800, 345);
+        createEnemies(1, 2200, 1200);
     }
 }
 

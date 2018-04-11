@@ -1,7 +1,10 @@
 let winGame = {
 	create: function() { 
+		game.world.setBounds(0,0, 800, 600);
 		game.stage.backgroundColor = '#123456';	
-		game.add.text(game.world.centerX - 225, 50, "A Whale's Tale", { fontSize: '62px', fill: '#fff' });
+		let text = game.add.text(game.world.centerX - 225, 50, "A Whale's Tale", { fontSize: '62px', fill: '#fff' });
+		text.fixedToCamera = true;
+
 		let message1 = "You saved Wally!";
 		let message2 = "Yaaaaaaaay";
 		//let score = 0;
@@ -16,14 +19,16 @@ let winGame = {
 		// 	message2 = "will never get to use them. Because he's dead. Because of you.";
 		// }
 
-		game.add.text(game.world.centerX - 120, 170, message1, { fontSize: '22px', fill: '#fff' });
+		text = game.add.text(game.world.centerX - 120, 170, message1, { fontSize: '22px', fill: '#fff' });
+		text.fixedToCamera = true;
 
-		game.add.text(game.world.centerX - 95, 200, message2, { fontSize: '22px', fill: '#fff' });
-
+		text = game.add.text(game.world.centerX - 95, 200, message2, { fontSize: '22px', fill: '#fff' });
+		text.fixedToCamera = true;
 
 		button = game.add.button(game.world.centerX - 95, 400, 'button', actionOnClick, this, 1, 0);
 
 		function actionOnClick () {
+			//playGame.gameRestart();
 		    game.state.start('playGame');
 		}
 	}
